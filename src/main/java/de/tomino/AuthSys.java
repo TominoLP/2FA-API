@@ -32,7 +32,7 @@ import java.time.Instant;
  * A class that contains all the methods to generate a QR code and validate the code
  *
  * @author TominoLP / Tomino#0101
- * @version 1.0
+ * @version 1.1
  */
 
 public class AuthSys {
@@ -145,22 +145,17 @@ public class AuthSys {
      * @param path The path where the image should be saved
      * @see Image
      */
-    public static void saveQrCode(String secretKey, String issuer, String account, File path) {
-        saveQrCode(secretKey, issuer, account, "jpg", path);
-    }
+
 
     /**
-     * Generate the QR code from the data as an Image
+     * Generate the QR code as an Image
      *
-     * @param secretKey The secret key
-     * @param issuer    The issuer
-     * @param account   The account name
+     * @param image The image that should be saved
      * @param fileFormat The file format of the image
      * @param path The path where the image should be saved
      * @see Image
      */
-    public static void saveQrCode(String secretKey, String issuer, String account, String fileFormat, File path) {
-        BufferedImage image = generateQrCodeData(secretKey, issuer, account);
+    public static void saveImage(Image image, String fileFormat, File path) {
 
         int width = image.getWidth(null);
         int height = image.getHeight(null);
@@ -172,6 +167,28 @@ public class AuthSys {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Generate the QR code from the data as an Image
+     *
+     * @param image The image that should be saved
+     * @param fileFormat The file format of the image
+     * @param path The path where the image should be saved
+     * @see Image
+     */
+    public static void saveImage(BufferedImage image, String fileFormat, File path) {
+        int width = image.getWidth(null);
+        int height = image.getHeight(null);
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics g = bi.getGraphics();
+        try {
+            g.drawImage(image, 0, 0, null);
+            ImageIO.write(bi, fileFormat, path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**

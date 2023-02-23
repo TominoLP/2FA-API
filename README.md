@@ -39,6 +39,10 @@ such as Google Authenticator
 ```java
 boolean isValid = AuthSys.validateCode(secretKey, userEnteredCode);
 ```
+if you wish to save the QR code image to a file, you can use the method `saveQrCode`:
+```java
+AuthSys.saveQrCode(qrCodeImage, fileformat ,"path/to/file");
+```
 
 That's it! You can now use the TWOFA-API library to add Two-factor authentication to your Java application.
 
@@ -76,7 +80,7 @@ public class Example {
 
 ## Installation
 
-You can install the TWOFA-API library via [jitpack](http://www.jitpack.io) by adding the following to your Maven pom.xml file:
+You can install the TWOFA-API library via [jitpack](https://jitpack.io/#TominoLP/2FA-API) by adding the following to your Maven pom.xml file:
 
 #### Maven
 
@@ -89,7 +93,7 @@ You can install the TWOFA-API library via [jitpack](http://www.jitpack.io) by ad
 <dependency>
     <groupId>com.github.TominoLP</groupId>
     <artifactId>2FA-API</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
@@ -103,7 +107,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.TominoLP:2FA-API:1.0'
+    implementation 'com.github.TominoLP:2FA-API:1.1'
 }
 ```
 
