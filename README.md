@@ -89,7 +89,7 @@ You can install the TWOFA-API library via [jitpack](http://www.jitpack.io) by ad
 <dependency>
     <groupId>com.github.TominoLP</groupId>
     <artifactId>2FA-API</artifactId>
-    <version>v1.1</version>
+    <version>1.0</version>
 </dependency>
 ```
 
@@ -103,7 +103,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.TominoLP:2FA-API:v1.1'
+    implementation 'com.github.TominoLP:2FA-API:1.0'
 }
 ```
 
