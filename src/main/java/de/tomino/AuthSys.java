@@ -136,16 +136,6 @@ public class AuthSys {
 
     }
 
-    /**
-     * Generate the QR code from the data as an Image
-     *
-     * @param secretKey The secret key
-     * @param issuer    The issuer
-     * @param account   The account name
-     * @param path The path where the image should be saved
-     * @see Image
-     */
-
 
     /**
      * Generate the QR code as an Image
@@ -156,7 +146,6 @@ public class AuthSys {
      * @see Image
      */
     public static void saveImage(Image image, String fileFormat, File path) {
-
         int width = image.getWidth(null);
         int height = image.getHeight(null);
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
