@@ -3,7 +3,7 @@
 [![](https://jitpack.io/v/TominoLP/2FA-API.svg)](https://jitpack.io/#TominoLP/2FA-API)
 
 ## Introduction
-The TWOFA-API is a Java library for generating QR codes and validating codes for Two-factor authentication. The library supports both the TOTP (Time-based One-Time Password) algorithm and SHA1 hashing. The library generates a secret key that can be stored securely on the client-side and a QR code that can be displayed to the user.
+The 2FA-API is a Java library for generating QR codes and validating codes for Two-factor authentication. The library supports both the TOTP (Time-based One-Time Password) algorithm and SHA1 hashing. The library generates a secret key that can be stored securely on the client-side and a QR code that can be displayed to the user.
 
 
 ---
