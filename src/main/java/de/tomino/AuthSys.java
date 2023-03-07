@@ -1,4 +1,5 @@
-package de.tomino;/*
+package de.tomino;
+/*
  * Copyright 2023 Tom Werth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,12 +33,12 @@ import java.time.Instant;
  * A class that contains all the methods to generate a QR code and validate the code
  *
  * @author TominoLP / Tomino#0101
- * @version 1.1
+ * @version 1.2
  */
-
+@SuppressWarnings("unused")
 public class AuthSys {
 
-    private static final SecureRandom random = new SecureRandom();
+    static final SecureRandom random = new SecureRandom();
 
     /**
      * Generates a random Security Key
@@ -58,7 +59,6 @@ public class AuthSys {
      * @param code   The code that should be validated
      * @return True if the code is valid
      */
-
     public static boolean validateCode(String secret, String code) {
         final Base32 base32 = new Base32();
         byte[] decodedKey = base32.decode(secret);
@@ -91,6 +91,45 @@ public class AuthSys {
     }
 
     /**
+     * Validate the code to check if it is valid
+     *
+     * @param secret The secret key
+     * @param code   The code that should be validated
+     * @return True if the code is valid
+     */
+    public static boolean validateTOTPCode(String secret, String code) {
+        final long durationInSeconds = TOTP.timeMap.get(secret);
+        long timestamp = Instant.now().getEpochSecond() / durationInSeconds;
+        byte[] data = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            data[i] = (byte) (timestamp & 0xff);
+            timestamp >>= 8;
+        }
+
+        final SecretKeySpec signingKey = new SecretKeySpec(secret.getBytes(), "HmacSHA1");
+        Mac mac = null;
+        try {
+            mac = Mac.getInstance("HmacSHA1");
+            mac.init(signingKey);
+        } catch (NoSuchAlgorithmException | InvalidKeyException exception) {
+            exception.printStackTrace();
+        }
+
+        if (mac == null) return false;
+        byte[] hash = mac.doFinal(data);
+        int offset = hash[hash.length - 1] & 0xf;
+        int value = ((hash[offset] & 0x7f) << 24) |
+                ((hash[offset + 1] & 0xff) << 16) |
+                ((hash[offset + 2] & 0xff) << 8) |
+                (hash[offset + 3] & 0xff);
+
+        int mod = (int) Math.pow(10, 6);
+        int expectedCode = value % mod;
+
+        return expectedCode == Integer.parseInt(code);
+    }
+
+    /**
      * Generate the QR code from the data as a BufferedImage
      *
      * @param secretKey The secret key
@@ -99,7 +138,6 @@ public class AuthSys {
      * @return The generated BufferedImage
      * @see BufferedImage
      */
-
     public static BufferedImage generateQrCodeData(String secretKey, String issuer, String account) {
         Image image = generateQrCode(secretKey, issuer, account);
         final BufferedImage imageData = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB_PRE);
@@ -135,7 +173,6 @@ public class AuthSys {
         return image;
 
     }
-
 
     /**
      * Generate the QR code as an Image
@@ -188,7 +225,7 @@ public class AuthSys {
      * @param account   The account name
      * @return The generated link
      */
-    public static String generatelink(String secretKey, String issuer, String account) {
+    public static String generateLink(String secretKey, String issuer, String account) {
         return "otpauth://totp/" + account + "?secret=" + secretKey
                 + "&issuer=" + issuer + "&algorithm=SHA1&digits=6&period=30";
     }

@@ -47,6 +47,28 @@ AuthSys.saveQrCode(qrCodeImage, fileformat ,"path/to/file");
 ```
 
 That's it! You can now use the TWOFA-API library to add Two-factor authentication to your Java application.
+ 
+
+
+### NEW!
+
+you can now also generate TOTP codes with the method `generateCode`:
+```java
+HashMap<String, String> secretKeys = TOTP.generateCode(timeInSecondsAsInt)
+```
+the method returns a HashMap with the secret key as key and the code as value. 
+
+now you can send the code to the user via email or something else. 
+
+that you can validate the code with the method `validateTOTPCode`:
+```java
+boolean isValid = AuthSys.validateTOTPCode(secretKey, code);
+```
+
+you can also get the ExpirationDate of the code with the method `getExpirationDate`:
+```java
+Date expirationDate = TOTP.getExpirationDate(secretKey);
+```
 
 ---
 ## Example
