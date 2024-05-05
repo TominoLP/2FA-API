@@ -5,8 +5,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.Writer;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -21,6 +20,7 @@ public abstract class AbstractQRCode {
     public AbstractQRCode() {
         this.imageType = "PNG";
     }
+
     public void writeTo(OutputStream stream) {
         try {
             this.writeToStream(stream);

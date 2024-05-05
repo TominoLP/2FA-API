@@ -9,6 +9,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
+
 public class QRCode extends AbstractQRCode {
     public static final MatrixToImageConfig DEFAULT_CONFIG = new MatrixToImageConfig();
     protected final String text;
