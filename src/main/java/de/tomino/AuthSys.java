@@ -15,7 +15,7 @@ package de.tomino;
  * limitations under the License.
  */
 
-import net.glxn.qrgen.javase.QRCode;
+import de.tomino.utils.QRCode;
 import org.apache.commons.codec.binary.Base32;
 
 import javax.crypto.Mac;
