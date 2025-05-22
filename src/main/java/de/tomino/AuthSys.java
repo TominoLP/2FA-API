@@ -57,37 +57,45 @@ public class AuthSys {
      *
      * @param secret The secret key
      * @param code   The code that should be validated
+     * @param driftSeconds The number of seconds to drift backwards and forwards
      * @return True if the code is valid
      */
-    public static boolean validateCode(String secret, String code) {
+    public static boolean validateCode(String secret, String code, int driftSeconds) {
         final Base32 base32 = new Base32();
         byte[] decodedKey = base32.decode(secret);
-        long time = Instant.now().getEpochSecond() / 30;
-        byte[] data = new byte[8];
-        for (int i = 7; i >= 0; i--) {
-            data[i] = (byte) (time & 0xff);
-            time >>= 8;
-        }
-        final SecretKeySpec signingKey = new SecretKeySpec(decodedKey, "HmacSHA1");
-        Mac mac = null;
-        try {
-            mac = Mac.getInstance("HmacSHA1");
-            mac.init(signingKey);
-        } catch (NoSuchAlgorithmException | InvalidKeyException exception) {
-            exception.printStackTrace();
-        }
+        long currentTimeSeconds = Instant.now().getEpochSecond();
 
-        if (mac == null) return false;
-        byte[] hash = mac.doFinal(data);
-        int offset = hash[hash.length - 1] & 0xf;
-        int value = ((hash[offset] & 0x7f) << 24) |
-                ((hash[offset + 1] & 0xff) << 16) |
-                ((hash[offset + 2] & 0xff) << 8) |
-                (hash[offset + 3] & 0xff);
+        for (long t = currentTimeSeconds - driftSeconds; t <= currentTimeSeconds + driftSeconds; t += 30) {
+            long timeStep = t / 30;
+            byte[] data = new byte[8];
+            for (int i = 7; i >= 0; i--) {
+                data[i] = (byte) (timeStep & 0xff);
+                timeStep >>= 8;
+            }
+            final SecretKeySpec signingKey = new SecretKeySpec(decodedKey, "HmacSHA1");
+            Mac mac = null;
+            try {
+                mac = Mac.getInstance("HmacSHA1");
+                mac.init(signingKey);
+            } catch (NoSuchAlgorithmException | InvalidKeyException exception) {
+                exception.printStackTrace();
+            }
 
-        int digits = 6;
-        int mod = (int) Math.pow(10, digits);
-        return value % mod == Integer.parseInt(code);
+            if (mac == null) continue; // Or return false, depending on desired behavior for errors. For now, skip this iteration.
+            byte[] hash = mac.doFinal(data);
+            int offset = hash[hash.length - 1] & 0xf;
+            int value = ((hash[offset] & 0x7f) << 24) |
+                    ((hash[offset + 1] & 0xff) << 16) |
+                    ((hash[offset + 2] & 0xff) << 8) |
+                    (hash[offset + 3] & 0xff);
+
+            int digits = 6;
+            int mod = (int) Math.pow(10, digits);
+            if (value % mod == Integer.parseInt(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

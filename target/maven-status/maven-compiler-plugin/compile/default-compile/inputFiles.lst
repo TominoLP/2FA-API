@@ -1,0 +1,4 @@
+/app/src/main/java/de/tomino/TOTP.java
+/app/src/main/java/de/tomino/utils/AbstractQRCode.java
+/app/src/main/java/de/tomino/utils/QRCode.java
+/app/src/main/java/de/tomino/AuthSys.java
